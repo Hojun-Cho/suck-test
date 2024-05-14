@@ -3,6 +3,7 @@
 
 #ifndef  _GNU_SOURCE
 #define _GNU_SOURCE
+#endif
 
 #define DEFAULT_FIBERS (5)
 #define DEFAULT_STACK (8192)
@@ -29,12 +30,13 @@ typedef struct
 	int cap;
 } Proc;
 
-int	wait_fibers(Proc *p);
+int wait_fibers(Proc *p);
 int create_fiber(Proc *p, void *(*func)(void *), void *item);
 Proc *new_proc(int n);
 void destroy_proc(Proc *p);
 
-Proc *new_proc(int n)
+Proc*
+new_proc(int n)
 {
 	Proc *p = malloc(sizeof(Proc));
 	if (p == 0) {
@@ -50,21 +52,24 @@ Proc *new_proc(int n)
 	return p;
 }
 
-void destroy_proc(Proc *p)
+void
+destroy_proc(Proc *p)
 {
 	wait_fibers(p);
 	free(p->lst);
 	free(p);
 }
 
-int start_fiber(void *_f)
+int
+start_fiber(void *_f)
 {
 	Fiber *f = _f;
 	f->func(f->arg);
 	return 0;
 }
 
-int create_fiber(Proc *p, void *(*func)(void *), void *item)
+int
+create_fiber(Proc *p, void *(*func)(void *), void *item)
 {
 	if (p->len >= p->cap) {
 		return -1;
@@ -85,7 +90,8 @@ int create_fiber(Proc *p, void *(*func)(void *), void *item)
 	return 0;
 }
 
-int	wait_fibers(Proc *p)
+int
+wait_fibers(Proc *p)
 {
 	if (p->pid != getpid()) {
 		return -1;

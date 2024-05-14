@@ -6,12 +6,12 @@ typedef struct Lock
 	int val;
 } Lock;
 
-extern int	tas(int *);
+extern int tas(int *);
 
 void
 lock(Lock *lk)
 {
-	int	i;
+	int i;
 
 	while (!tas(&lk->val))
 		;
